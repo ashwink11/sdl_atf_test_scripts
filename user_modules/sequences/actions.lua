@@ -439,4 +439,14 @@ function m.getPathToFileInStorage(pFileName, pAppId)
   .. utils.getDeviceMAC() .. "/" .. pFileName
 end
 
+--[[ @setHMIAppId: Write custom HMI appID in array
+--! @parameters:
+--! pAppId - application number (1, 2, etc.)
+--! pHmiAppId - HMI appId value
+--! @return: none
+--]]
+function m.setHMIAppId(pAppId, pHmiAppId)
+  hmiAppIds[m.getConfigAppParams(pAppId).appID] = pHmiAppId
+end
+
 return m
