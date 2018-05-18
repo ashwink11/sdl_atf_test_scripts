@@ -348,6 +348,26 @@ function module.getDefaultHMITable()
                 signalChangeThresholdAvailable = true
               }
             },
+            seatControlCapabilities = {
+              {
+                moduleName = "Seat",
+                heatingEnabledAvailable = true,
+                coolingEnabledAvailable = true,
+                heatingLevelAvailable = true,
+                coolingLevelAvailable = true,
+                horizontalPositionAvailable = true,
+                verticalPositionAvailable = true,
+                frontVerticalPositionAvailable = true,
+                backVerticalPositionAvailable = true,
+                backTiltAngleAvailable = true,
+                headSupportHorizontalPositionAvailable = true,
+                headSupportVerticalPositionAvailable = true,
+                massageEnabledAvailable = true,
+                massageModeAvailable = true,
+                massageCushionFirmnessAvailable = true,
+                memoryAvailable = true
+              }
+	         },
           buttonCapabilities = (function()
             local buttons = {
               -- climate
