@@ -9,7 +9,7 @@
 --
 -- Description:
 -- In case:
--- 1) SDL receive several supported Radio parameters in GetCapabilites response and
+-- 1) SDL receive several supported Seat parameters in GetCapabilites response and
 -- 2) App sends RC RPC request with several supported by HMI parameters and some unssuported
 -- SDL must:
 -- 1) Reject such request with UNSUPPORTED_RESOURCE result code, success: false
