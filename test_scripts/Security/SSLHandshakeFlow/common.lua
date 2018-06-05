@@ -8,6 +8,7 @@ local utils = require("user_modules/utils")
 local test = require("user_modules/dummy_connecttest")
 local commonFunctions = require("user_modules/shared_testcases/commonFunctions")
 local commonPreconditions = require('user_modules/shared_testcases/commonPreconditions')
+local constants = require("protocol_handler/ford_protocol_constants")
 
 --[[ General configuration parameters ]]
 config.SecurityProtocol = "DTLS"
@@ -189,6 +190,40 @@ function m.policyTableUpdateSuccess(pPTUpdateFunc)
         m.policyTableUpdate(pPTUpdateFunc, expNotificationFunc)
       end
     end)
+end
+
+
+local function registerStartSecureServiceFunc(pMobSession)
+  function pMobSession.mobile_session_impl.control_services:StartSecureService(pServiceId, pPayload)
+    local msg = {
+      serviceType = pServiceId,
+      frameInfo = constants.FRAME_INFO.START_SERVICE,
+      sessionId = self.session.sessionId.get(),
+      encryption = true,
+      binaryData = pPayload
+    }
+    self:Send(msg)
+  end
+  function pMobSession.mobile_session_impl:StartSecureService(pServiceId, pPayload)
+    if not self.isSecuredSession then
+      self.security:registerSessionSecurity()
+      self.security:prepareToHandshake()
+    end
+    return self.control_services:StartSecureService(pServiceId, pPayload)
+  end
+  function pMobSession:StartSecureService(pServiceId, pPayload)
+    return self.mobile_session_impl:StartSecureService(pServiceId, pPayload)
+  end
+end
+
+local origGetMobileSession = actions.getMobileSession
+function actions.getMobileSession(pAppId)
+  if not pAppId then pAppId = 1 end
+  if not test.mobileSession[pAppId] then
+    local session = origGetMobileSession(pAppId)
+    registerStartSecureServiceFunc(session)
+  end
+  return origGetMobileSession(pAppId)
 end
 
 return m

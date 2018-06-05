@@ -257,6 +257,20 @@ function module.getDefaultHMITable()
         },
         phoneCapability = {
           dialNumberEnabled = true
+        },
+        videoStreamingCapability = {
+          preferredResolution = {
+            resolutionWidth = 800,
+            resolutionHeight = 350
+          },
+          maxBitrate = 10000,
+          supportedFormats = {
+            {
+              protocol = "RAW",
+              codec = "H264"
+            }
+          },
+          hapticSpatialDataSupported = false
         }
       }
     },
