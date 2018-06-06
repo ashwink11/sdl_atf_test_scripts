@@ -5,6 +5,8 @@ local commonFunctions = require('user_modules/shared_testcases/commonFunctions')
 
 local isInitialStep = true
 local idx = 1
+local skipReason = nil
+
 local runner = {}
 
 runner.testSettings = testSettings
@@ -109,12 +111,14 @@ local function isTestApplicable(testApplicableSdlSettings)
 end
 
 local function skipTest(reason)
+  Test.caseTitles[idx] = nil
+  Test.caseTitles[idx] = {}
   runner.Title("TEST SKIPPED")
   runner.Step(
       "Skip reason",
-      function(skipReason, self)
-        commonFunctions:userPrint(consts.color.cyan, skipReason)
-        self:SkipTest()
+      function(skipRsn)
+        commonFunctions:userPrint(consts.color.cyan, skipRsn)
+        Test:SkipTest()
       end,
       { reason }
     )
@@ -150,7 +154,10 @@ function runner.Step(testStepName, testStepImplFunction, paramsTable)
   local filler = "="
   if isInitialStep then
     printTestInformation()
-    if not isTestApplicable(runner.testSettings.restrictions.sdlBuildOptions) then
+    if skipReason ~= nil then
+      isInitialStep = false
+      skipTest(skipReason)
+    elseif not isTestApplicable(runner.testSettings.restrictions.sdlBuildOptions) then
       local message = "Test is incompatible with current build configuration of SDL:\n" ..
           commonFunctions:convertTableToString(Test.sdlBuildOptions, 1) ..
           "\n\nTest is possible to run with SDL that was built with next build options:\n" ..
@@ -166,6 +173,10 @@ function runner.Step(testStepName, testStepImplFunction, paramsTable)
     extendedAddTestStep(testStepName, testStepImplFunction, paramsTable)
   end
   idx = idx + 1
+end
+
+function runner.skipTest(message)
+  skipReason = message
 end
 
 return runner

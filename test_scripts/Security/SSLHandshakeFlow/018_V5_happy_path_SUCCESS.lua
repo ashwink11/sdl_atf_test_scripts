@@ -4,9 +4,15 @@
 --[[ Required Shared libraries ]]
 local runner = require('user_modules/script_runner')
 local common = require("test_scripts/Security/SSLHandshakeFlow/common")
-local bson = require('bson4lua')
 local constants = require("protocol_handler/ford_protocol_constants")
 local utils = require("user_modules/utils")
+local bson
+
+if utils.isFileExist("modules/libbson4lua.so") then
+  bson = require('bson4lua')
+else
+  runner.skipTest("'bson4lua' library is not available in ATF")
+end
 
 --[[ Test Configuration ]]
 runner.testSettings.isSelfIncluded = false

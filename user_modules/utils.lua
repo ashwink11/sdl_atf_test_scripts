@@ -203,4 +203,19 @@ function m.printTable(pTbl)
   m.cprintTable(39, pTbl)
 end
 
+--[[ @isFileExist: check if file or directory exists
+--! @parameters:
+--! pFile - path to file or directory
+--! @return: true - in case if file exists, otherwise - false
+--]]
+function m.isFileExist(pFile)
+  local file = io.open(pFile, "r")
+  if file == nil then
+    return false
+  else
+    file:close()
+    return true
+  end
+end
+
 return m
